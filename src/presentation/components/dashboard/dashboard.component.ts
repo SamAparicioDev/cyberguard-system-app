@@ -63,7 +63,7 @@ export class DashboardComponent {
       },
       error: (err) => {
         this.loading = false;
-        this.error = err.error?.message || 'Error al reportar amenaza';
+        this.error = err.error?.error || err.error?.message || 'Error al reportar amenaza';
       }
     });
   }
