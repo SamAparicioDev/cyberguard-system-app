@@ -41,6 +41,7 @@ __screenshots__/
 
 # System files
 .amazonq/rules 
+.env
 FRONTEND_CONTEXT.md
 .DS_Store
 Thumbs.db
