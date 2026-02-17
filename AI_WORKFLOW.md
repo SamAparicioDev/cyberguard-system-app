@@ -290,3 +290,156 @@ refactor: remove all 'any' types and add proper typing
 - All code now properly typed (no 'any' remaining)
 - Tests passing (13/13)
 ```
+
+
+---
+
+## CG-005: Admin Dashboard Integration ✅
+
+**Fecha:** 2024
+**Estado:** Completado
+
+### Descripción
+Consolidación y documentación de la integración completa del dashboard administrativo con todas las funcionalidades implementadas.
+
+### Componentes Integrados
+
+#### 1. Vista Principal del Dashboard
+- Header con información de usuario (username, role)
+- Botón de cierre de sesión
+- Layout responsive con grid flexible
+- Diseño adaptativo para mobile, tablet y desktop
+
+#### 2. Formulario de Reporte de Amenazas
+- Selección de tipo de amenaza (malware, intrusion, phishing, ddos, ransomware)
+- Selección de severidad (low, medium, high, critical)
+- Validación de IP origen (requerida, formato IPv4)
+- Validación de IP destino (opcional, formato IPv4)
+- Descripción con validación (10-500 caracteres)
+- Estados de loading y mensajes de éxito/error
+- Reset automático del formulario tras reporte exitoso
+
+#### 3. Visualización de Alertas en Tiempo Real
+- Componente AlertsComponent integrado
+- Conexión WebSocket automática
+- Actualización en tiempo real de amenazas
+- Filtros por tipo y severidad
+- Búsqueda por descripción, IP o ID
+- Paginación (10 alertas por página)
+- Estadísticas por severidad
+- Exportación a JSON
+- Indicador de estado de conexión
+
+#### 4. Protección con adminGuard
+- Ruta `/dashboard` protegida con canActivate
+- Verificación de token JWT en localStorage
+- Redirección automática a `/autenticacion` si no autenticado
+- Lazy loading del componente para optimización
+
+### Arquitectura Aplicada
+
+**Patrones de Diseño:**
+- **Facade Pattern**: AuthService, ThreatService, WebSocketService
+- **Repository Pattern**: AuthRepository, ThreatRepository, WebSocketRepository
+- **Use Case Pattern**: LoginUseCase, ReportThreatUseCase
+- **Observer Pattern**: RxJS BehaviorSubject para estado reactivo
+- **Dependency Inversion**: Inyección de dependencias con abstract classes
+
+**Principios SOLID:**
+- **Single Responsibility**: Cada componente tiene una responsabilidad única
+- **Open/Closed**: Extensible mediante interfaces y abstracciones
+- **Liskov Substitution**: Implementaciones intercambiables de repositorios
+- **Interface Segregation**: Interfaces específicas por dominio
+- **Dependency Inversion**: Dependencias de abstracciones, no implementaciones
+
+**Clean Code:**
+- Nombres descriptivos y semánticos
+- Funciones pequeñas y enfocadas
+- Validaciones explícitas
+- Manejo de errores consistente
+- Tipado estricto (cero 'any')
+
+### Flujo de Usuario
+
+1. **Login** → AuthService valida credenciales → Guarda token JWT
+2. **Redirección** → Router navega a `/dashboard` → adminGuard valida token
+3. **Conexión WebSocket** → AuthService conecta automáticamente
+4. **Dashboard Cargado** → Usuario ve formulario + alertas en tiempo real
+5. **Reporte de Amenaza** → ThreatService envía con JWT → Backend procesa
+6. **Notificación WebSocket** → AlertsComponent recibe y muestra en tiempo real
+7. **Logout** → AuthService desconecta WebSocket → Limpia localStorage
+
+### Tecnologías y Herramientas
+
+**Frontend:**
+- Angular 21.1.3 (standalone components)
+- TypeScript (strict mode)
+- RxJS (reactive programming)
+- Reactive Forms (validaciones)
+- CSS3 (responsive design con clamp, media queries)
+
+**Testing:**
+- Vitest (test runner)
+- Angular TestBed (component testing)
+- 13 tests unitarios pasando
+- Cobertura: UseCases, Services, Guards
+
+**Backend Integration:**
+- REST API: http://localhost:3000
+- WebSocket: ws://localhost:8081
+- JWT Authentication
+- Headers automáticos con interceptor
+
+### Responsive Design
+
+**Mobile (< 768px):**
+- Layout de una columna
+- Formulario apilado verticalmente
+- Alertas en lista compacta
+- Botones full-width
+
+**Tablet (768px - 1024px):**
+- Layout de dos columnas
+- Formulario con campos en fila
+- Alertas con scroll horizontal
+- Espaciado optimizado
+
+**Desktop (> 1024px):**
+- Layout de tres columnas
+- Formulario expandido
+- Alertas con tabla completa
+- Máximo aprovechamiento de espacio
+
+### Variables de Entorno
+
+Todas las URLs configuradas en `src/environments/`:
+```typescript
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:3000',
+  wsUrl: 'ws://localhost:8081'
+};
+```
+
+### Tests
+- 13 tests unitarios pasando
+- Cobertura completa de lógica de negocio
+- Tests actualizados tras cada cambio
+
+### Commit
+```
+feat(CG-005): consolidate admin dashboard integration
+
+- Document complete dashboard integration
+- Threat reporting form with validations
+- Real-time alerts with WebSocket
+- adminGuard protection on /dashboard route
+- Responsive design (mobile, tablet, desktop)
+- Facade, Repository, and Use Case patterns
+- SOLID principles and Clean Code applied
+- Zero 'any' types, full TypeScript typing
+- Tests passing (13/13)
+```
+
+### Próximo Feature
+CG-006: TBD (Threat History, User Profile, Analytics, etc.)
