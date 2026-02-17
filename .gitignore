@@ -40,5 +40,7 @@ testem.log
 __screenshots__/
 
 # System files
+.amazonq/rules 
+FRONTEND_CONTEXT.md
 .DS_Store
 Thumbs.db
