@@ -6,11 +6,12 @@ import { AuthService } from '../../../core/infrastructure/services/auth.service'
 import { ThreatService } from '../../../core/infrastructure/services/threat.service';
 import { ThreatType } from '../../../core/domain/models/threat-type.enum';
 import { ThreatSeverity } from '../../../core/domain/models/threat-severity.enum';
+import { AlertsComponent } from '../alerts/alerts.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, AlertsComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })

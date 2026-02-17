@@ -133,6 +133,78 @@ fix: resolve loading state and error display issues in login
 - Apply finalize operator to ensure loading reset
 ```
 
+### Próximo Feature
+CG-004: Alert History Module
+
+---
+
+## CG-003: WebSocket Notifications Module ✅
+
+**Fecha:** 2024
+**Estado:** Completado
+
+### Descripción
+Implementación de notificaciones en tiempo real con WebSocket, persistencia en localStorage y deduplicación de mensajes.
+
+### Cambios Realizados
+
+#### Archivos Creados
+```
+core/
+├── domain/
+│   ├── models/ (AlertMessage, WebSocketCommand)
+│   └── ports/ (WebSocketRepository)
+└── infrastructure/
+    └── services/ (WebSocketRepositoryImpl, WebSocketService)
+
+presentation/
+└── components/
+    └── alerts/ (AlertsComponent + template + styles)
+```
+
+#### Archivos Modificados
+- `src/app/app.config.ts` - Agregado WebSocketRepository provider
+- `src/core/infrastructure/services/auth.service.ts` - Integrado WebSocket en login/logout
+- `src/presentation/components/dashboard/` - Agregado componente de alertas
+
+#### Tests
+- 13 tests unitarios pasando
+- Tests actualizados con WebSocketService mock
+
+### Patrones Aplicados
+- Hexagonal Architecture
+- Repository Pattern
+- Facade Pattern (WebSocketService)
+- Observer Pattern (RxJS BehaviorSubject)
+
+### Funcionalidades
+- Conexión WebSocket automática al login
+- Desconexión al logout
+- Reconexión automática cada 2 segundos
+- Deduplicación por eventId y threatId
+- Persistencia en localStorage (cg_ws_history)
+- Historial máximo 200 mensajes
+- Comandos: clear-all, delete-one
+- Indicador de estado de conexión
+- Alertas con colores por severidad
+- Full responsive
+
+### Commit
+```
+feat(CG-003): implement websocket notifications module
+
+- Add WebSocketRepository with reconnection logic
+- Create AlertMessage and WebSocketCommand models
+- Implement WebSocketService facade
+- Integrate WebSocket with auth (connect/disconnect)
+- Add AlertsComponent with real-time updates
+- Deduplication by eventId and threatId
+- LocalStorage persistence (max 200 messages)
+- Add connection status indicator
+- Severity-based color coding (responsive)
+- Update tests with WebSocketService mock (13 passing)
+```
+
 ---
 
 ## Configuración de Entorno
