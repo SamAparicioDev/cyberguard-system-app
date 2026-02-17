@@ -218,3 +218,60 @@ feat(CG-003): implement websocket notifications module
 **Variables de entorno configuradas en:**
 - `src/environments/environment.ts`
 - `src/environments/environment.prod.ts`
+
+
+## CG-004: Alert History Module ✅
+
+**Fecha:** 2024
+**Estado:** Completado
+
+### Descripción
+Mejoras al módulo de alertas con filtros, búsqueda, paginación, estadísticas y exportación.
+
+### Cambios Realizados
+
+#### Archivos Modificados
+- `src/presentation/components/alerts/alerts.component.ts` - Agregado filtros, búsqueda, paginación y exportación
+- `src/presentation/components/alerts/alerts.component.html` - UI con filtros y estadísticas
+- `src/presentation/components/alerts/alerts.component.css` - Estilos responsive para nuevas features
+
+#### Tests
+- 13 tests unitarios pasando
+
+### Funcionalidades
+- ✅ Búsqueda por descripción, IP o ID
+- ✅ Filtro por tipo de amenaza
+- ✅ Filtro por severidad
+- ✅ Paginación (10 por página)
+- ✅ Estadísticas por severidad
+- ✅ Exportación a JSON
+- ✅ Full responsive
+
+### Commit
+```
+feat(CG-004): implement alert history enhancements
+
+- Add search by description, IP, and threat ID
+- Implement filters by type and severity
+- Add pagination (10 items per page)
+- Display statistics by severity level
+- Add JSON export functionality
+- Improve UX with stats bar
+- Full responsive design
+- Tests passing (13/13)
+```
+
+
+### Bugfixes
+```
+fix: resolve websocket message parsing and real-time display issues
+
+- Fix WebSocket message structure parsing (nested data.data)
+- Add null-safe validation in getStats and getUniqueTypes
+- Add ChangeDetectorRef to force UI updates on new alerts
+- Filter invalid messages from localStorage on load
+- Fix deduplication with null-safe checks
+- Auto-connect WebSocket if session exists on app init
+- Remove console logs for cleaner UX
+- Tests passing (13/13)
+```

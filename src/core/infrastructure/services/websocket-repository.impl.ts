@@ -36,9 +36,21 @@ export class WebSocketRepositoryImpl extends WebSocketRepository {
       };
 
       this.ws.onmessage = (event) => {
-        const message: AlertMessage = JSON.parse(event.data);
-        message.timestamp = Date.now();
-        this.addMessage(message);
+        try {
+          const message = JSON.parse(event.data);
+          
+          // Extraer estructura anidada del worker
+          if (message.data && message.data.eventId && message.data.data) {
+            const alert: AlertMessage = {
+              eventId: message.data.eventId,
+              data: message.data.data,
+              timestamp: Date.now()
+            };
+            this.addMessage(alert);
+          }
+        } catch (error) {
+          console.error('Error parsing WebSocket message:', error);
+        }
       };
 
       this.ws.onerror = (error) => {
@@ -95,10 +107,10 @@ export class WebSocketRepositoryImpl extends WebSocketRepository {
   private addMessage(message: AlertMessage): void {
     const current = this.messages$.value;
     
-    // Deduplicación
+    // Deduplicación con validación null-safe
     const exists = current.some(m => 
       m.eventId === message.eventId || 
-      m.data.threatId === message.data.threatId
+      (m.data?.threatId && message.data?.threatId && m.data.threatId === message.data.threatId)
     );
     
     if (!exists) {
@@ -122,7 +134,11 @@ export class WebSocketRepositoryImpl extends WebSocketRepository {
       const stored = localStorage.getItem(this.STORAGE_KEY);
       if (stored) {
         const messages = JSON.parse(stored);
-        this.messages$.next(messages);
+        // Filtrar solo alertas válidas (ignorar comandos como clear-all)
+        const validMessages = messages.filter((m: any) => 
+          m.eventId && m.data && m.data.threatId
+        );
+        this.messages$.next(validMessages);
       }
     } catch (error) {
       console.error('Failed to load from storage:', error);
