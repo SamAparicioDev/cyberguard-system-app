@@ -1,11 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { AuthService } from '../../../core/infrastructure/services/auth.service';
 import { ThreatService } from '../../../core/infrastructure/services/threat.service';
 import { ThreatType } from '../../../core/domain/models/threat-type.enum';
 import { ThreatSeverity } from '../../../core/domain/models/threat-severity.enum';
+import { ThreatRequest } from '../../../core/domain/models/threat-request.model';
 import { AlertsComponent } from '../alerts/alerts.component';
 
 @Component({
@@ -38,7 +39,7 @@ export class DashboardComponent {
   success = '';
   error = '';
 
-  ipValidator(control: any) {
+  ipValidator(control: AbstractControl): ValidationErrors | null {
     if (!control.value) return null;
     const ipv4 = /^(25[0-5]|2[0-4]\d|1?\d?\d)(\.(25[0-5]|2[0-4]\d|1?\d?\d)){3}$/;
     return ipv4.test(control.value) ? null : { ip: true };
@@ -51,7 +52,14 @@ export class DashboardComponent {
     this.error = '';
     this.success = '';
 
-    const threat = this.threatForm.value as any;
+    const formValue = this.threatForm.value;
+    const threat: ThreatRequest = {
+      type: formValue.type as ThreatType,
+      severity: formValue.severity as ThreatSeverity,
+      sourceIp: formValue.sourceIp!,
+      targetIp: formValue.targetIp || undefined,
+      description: formValue.description!
+    };
 
     this.threatService.reportThreat(threat).subscribe({
       next: (response) => {

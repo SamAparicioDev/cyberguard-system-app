@@ -12,7 +12,7 @@ export class WebSocketRepositoryImpl extends WebSocketRepository {
   private readonly WS_URL = environment.wsUrl;
   private readonly STORAGE_KEY = 'cg_ws_history';
   private readonly MAX_MESSAGES = 200;
-  private reconnectInterval: any;
+  private reconnectInterval: ReturnType<typeof setInterval> | null = null;
   private connected = false;
 
   constructor() {
@@ -133,9 +133,9 @@ export class WebSocketRepositoryImpl extends WebSocketRepository {
     try {
       const stored = localStorage.getItem(this.STORAGE_KEY);
       if (stored) {
-        const messages = JSON.parse(stored);
+        const messages: AlertMessage[] = JSON.parse(stored);
         // Filtrar solo alertas válidas (ignorar comandos como clear-all)
-        const validMessages = messages.filter((m: any) => 
+        const validMessages = messages.filter((m: AlertMessage) => 
           m.eventId && m.data && m.data.threatId
         );
         this.messages$.next(validMessages);
