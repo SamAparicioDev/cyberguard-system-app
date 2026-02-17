@@ -45,6 +45,19 @@ presentation/
 - Repository Pattern
 - Use Case Pattern
 
+### Commit
+```
+feat(CG-001): implement authentication module with hexagonal architecture
+
+- Add domain models (User, LoginCredentials, AuthResponse)
+- Implement use cases (Login, Logout, GetCurrentUser)
+- Create AuthRepository with LocalStorage adapter
+- Add AuthService facade and adminGuard
+- Create login and dashboard components (responsive)
+- Configure environment variables and routes
+- Add 11 unit tests (all passing)
+```
+
 ### Próximo Feature
 CG-002: Threat Reporting Module
 
