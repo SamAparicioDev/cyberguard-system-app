@@ -1,0 +1,40 @@
+<div class="alerts-container">
+  <div class="alerts-header">
+    <h3>🔔 Alertas en Tiempo Real</h3>
+    <div class="alerts-actions">
+      <span class="connection-status" [class.connected]="connected">
+        {{ connected ? '● Conectado' : '○ Desconectado' }}
+      </span>
+      @if (alerts.length > 0) {
+        <button (click)="clearAll()" class="btn-clear">Limpiar Todo</button>
+      }
+    </div>
+  </div>
+
+  <div class="alerts-list">
+    @if (alerts.length === 0) {
+      <div class="no-alerts">
+        <p>No hay alertas</p>
+      </div>
+    } @else {
+      @for (alert of alerts; track alert.eventId) {
+        <div class="alert-card" [class]="getSeverityClass(alert.data.severity)">
+          <div class="alert-header">
+            <span class="alert-type">{{ alert.data.type }}</span>
+            <button (click)="deleteAlert(alert.eventId)" class="btn-delete">×</button>
+          </div>
+          <div class="alert-body">
+            <p class="alert-description">{{ alert.data.description }}</p>
+            <div class="alert-details">
+              <span><strong>IP:</strong> {{ alert.data.sourceIp }}</span>
+              <span><strong>ID:</strong> {{ alert.data.threatId }}</span>
+            </div>
+            @if (alert.timestamp) {
+              <span class="alert-time">{{ formatDate(alert.timestamp) }}</span>
+            }
+          </div>
+        </div>
+      }
+    }
+  </div>
+</div>

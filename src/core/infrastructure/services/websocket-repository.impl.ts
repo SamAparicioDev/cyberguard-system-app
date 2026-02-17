@@ -1,0 +1,139 @@
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { WebSocketRepository } from '../../domain/ports/websocket.repository';
+import { AlertMessage } from '../../domain/models/alert-message.model';
+import { WebSocketCommand } from '../../domain/models/websocket-command.model';
+import { environment } from '@environments/environment';
+
+@Injectable({ providedIn: 'root' })
+export class WebSocketRepositoryImpl extends WebSocketRepository {
+  private ws: WebSocket | null = null;
+  private messages$ = new BehaviorSubject<AlertMessage[]>([]);
+  private readonly WS_URL = environment.wsUrl;
+  private readonly STORAGE_KEY = 'cg_ws_history';
+  private readonly MAX_MESSAGES = 200;
+  private reconnectInterval: any;
+  private connected = false;
+
+  constructor() {
+    super();
+    this.loadFromStorage();
+  }
+
+  connect(): void {
+    if (this.ws?.readyState === WebSocket.OPEN) return;
+
+    try {
+      this.ws = new WebSocket(this.WS_URL);
+
+      this.ws.onopen = () => {
+        this.connected = true;
+        console.log('WebSocket connected');
+        if (this.reconnectInterval) {
+          clearInterval(this.reconnectInterval);
+          this.reconnectInterval = null;
+        }
+      };
+
+      this.ws.onmessage = (event) => {
+        const message: AlertMessage = JSON.parse(event.data);
+        message.timestamp = Date.now();
+        this.addMessage(message);
+      };
+
+      this.ws.onerror = (error) => {
+        console.error('WebSocket error:', error);
+      };
+
+      this.ws.onclose = () => {
+        this.connected = false;
+        console.log('WebSocket disconnected');
+        this.scheduleReconnect();
+      };
+    } catch (error) {
+      console.error('WebSocket connection failed:', error);
+      this.scheduleReconnect();
+    }
+  }
+
+  disconnect(): void {
+    if (this.reconnectInterval) {
+      clearInterval(this.reconnectInterval);
+      this.reconnectInterval = null;
+    }
+    if (this.ws) {
+      this.ws.close();
+      this.ws = null;
+    }
+    this.connected = false;
+  }
+
+  sendCommand(command: WebSocketCommand): void {
+    if (this.ws?.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify(command));
+      
+      if (command.type === 'clear-all') {
+        this.messages$.next([]);
+        this.saveToStorage([]);
+      } else if (command.type === 'delete-one' && command.id) {
+        const current = this.messages$.value;
+        const filtered = current.filter(m => m.eventId !== command.id);
+        this.messages$.next(filtered);
+        this.saveToStorage(filtered);
+      }
+    }
+  }
+
+  getMessages$(): Observable<AlertMessage[]> {
+    return this.messages$.asObservable();
+  }
+
+  isConnected(): boolean {
+    return this.connected;
+  }
+
+  private addMessage(message: AlertMessage): void {
+    const current = this.messages$.value;
+    
+    // Deduplicación
+    const exists = current.some(m => 
+      m.eventId === message.eventId || 
+      m.data.threatId === message.data.threatId
+    );
+    
+    if (!exists) {
+      const updated = [message, ...current].slice(0, this.MAX_MESSAGES);
+      this.messages$.next(updated);
+      this.saveToStorage(updated);
+    }
+  }
+
+  private scheduleReconnect(): void {
+    if (!this.reconnectInterval) {
+      this.reconnectInterval = setInterval(() => {
+        console.log('Attempting to reconnect...');
+        this.connect();
+      }, 2000);
+    }
+  }
+
+  private loadFromStorage(): void {
+    try {
+      const stored = localStorage.getItem(this.STORAGE_KEY);
+      if (stored) {
+        const messages = JSON.parse(stored);
+        this.messages$.next(messages);
+      }
+    } catch (error) {
+      console.error('Failed to load from storage:', error);
+    }
+  }
+
+  private saveToStorage(messages: AlertMessage[]): void {
+    try {
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(messages));
+    } catch (error) {
+      console.error('Failed to save to storage:', error);
+    }
+  }
+}
