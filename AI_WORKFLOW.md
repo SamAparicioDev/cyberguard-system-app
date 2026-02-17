@@ -122,6 +122,17 @@ feat(CG-002): implement threat reporting module
 - Add 2 unit tests (13 total passing)
 ```
 
+### Bugfix
+```
+fix: resolve loading state and error display issues in login
+
+- Add ChangeDetectorRef to force UI updates
+- Fix loading state stuck when backend responds
+- Improve error extraction from backend (error.error field)
+- Add timeout operator (10s) for request handling
+- Apply finalize operator to ensure loading reset
+```
+
 ---
 
 ## Configuración de Entorno
