@@ -6,18 +6,70 @@
         {{ connected ? '● Conectado' : '○ Desconectado' }}
       </span>
       @if (alerts.length > 0) {
+        <button (click)="exportToJSON()" class="btn-export">⬇️ Exportar</button>
         <button (click)="clearAll()" class="btn-clear">Limpiar Todo</button>
       }
     </div>
   </div>
 
+  <!-- Estadísticas -->
+  @if (alerts.length > 0) {
+    <div class="stats-bar">
+      <div class="stat">
+        <span class="stat-label">Total:</span>
+        <span class="stat-value">{{ getStats().total }}</span>
+      </div>
+      <div class="stat critical">
+        <span class="stat-label">Críticas:</span>
+        <span class="stat-value">{{ getStats().critical }}</span>
+      </div>
+      <div class="stat high">
+        <span class="stat-label">Altas:</span>
+        <span class="stat-value">{{ getStats().high }}</span>
+      </div>
+      <div class="stat medium">
+        <span class="stat-label">Medias:</span>
+        <span class="stat-value">{{ getStats().medium }}</span>
+      </div>
+      <div class="stat low">
+        <span class="stat-label">Bajas:</span>
+        <span class="stat-value">{{ getStats().low }}</span>
+      </div>
+    </div>
+  }
+
+  <!-- Filtros -->
+  @if (alerts.length > 0) {
+    <div class="filters-bar">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="applyFilters()"
+        placeholder="Buscar por descripción, IP o ID..."
+        class="filter-input"
+      />
+      <select [(ngModel)]="filterType" (ngModelChange)="applyFilters()" class="filter-select">
+        <option value="">Todos los tipos</option>
+        @for (type of getUniqueTypes(); track type) {
+          <option [value]="type">{{ type }}</option>
+        }
+      </select>
+      <select [(ngModel)]="filterSeverity" (ngModelChange)="applyFilters()" class="filter-select">
+        <option value="">Todas las severidades</option>
+        @for (severity of getUniqueSeverities(); track severity) {
+          <option [value]="severity">{{ severity }}</option>
+        }
+      </select>
+    </div>
+  }
+
   <div class="alerts-list">
-    @if (alerts.length === 0) {
+    @if (filteredAlerts.length === 0) {
       <div class="no-alerts">
-        <p>No hay alertas</p>
+        <p>{{ alerts.length === 0 ? 'No hay alertas' : 'No se encontraron resultados' }}</p>
       </div>
     } @else {
-      @for (alert of alerts; track alert.eventId) {
+      @for (alert of paginatedAlerts; track alert.eventId) {
         <div class="alert-card" [class]="getSeverityClass(alert.data.severity)">
           <div class="alert-header">
             <span class="alert-type">{{ alert.data.type }}</span>
@@ -37,4 +89,13 @@
       }
     }
   </div>
+
+  <!-- Paginación -->
+  @if (totalPages > 1) {
+    <div class="pagination">
+      <button (click)="prevPage()" [disabled]="currentPage === 1" class="btn-page">← Anterior</button>
+      <span class="page-info">Página {{ currentPage }} de {{ totalPages }}</span>
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn-page">Siguiente →</button>
+    </div>
+  }
 </div>
