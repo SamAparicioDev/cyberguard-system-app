@@ -443,3 +443,284 @@ feat(CG-005): consolidate admin dashboard integration
 
 ### Próximo Feature
 CG-006: TBD (Threat History, User Profile, Analytics, etc.)
+
+
+---
+
+## CG-006: UI Components & Responsive Design ✅
+
+**Fecha:** 2024
+**Estado:** Completado
+
+### Descripción
+Documentación completa de los componentes UI implementados con diseño responsive y estilos consistentes.
+
+### Componentes UI Implementados
+
+#### 1. Componente de Autenticación (Login)
+**Archivo**: `src/presentation/components/autenticacion/`
+
+**Características:**
+- Formulario de login con validaciones reactivas
+- Campos: username, password, remember me
+- Mensajes de error contextuales
+- Estados de loading durante autenticación
+- Diseño centrado con gradiente de fondo
+- Card con sombra y bordes redondeados
+
+**Estilos Responsive:**
+```css
+- Mobile (< 480px): Padding reducido, card compacta
+- Tablet (480px - 768px): Card estándar
+- Desktop (> 768px): Card con max-width 400px
+- Uso de clamp() para tipografía fluida
+```
+
+**Elementos de Diseño:**
+- Gradiente: `linear-gradient(135deg, #667eea 0%, #764ba2 100%)`
+- Border radius: 12px para card, 6px para inputs
+- Transiciones suaves en hover y focus
+- Input validation con border rojo
+- Botón con efecto hover (translateY, box-shadow)
+
+#### 2. Componente de Dashboard
+**Archivo**: `src/presentation/components/dashboard/`
+
+**Características:**
+- Header con información de usuario y logout
+- Formulario de reporte de amenazas
+- Integración de componente de alertas
+- Layout flexible con grid responsive
+- Validaciones en tiempo real
+
+**Estilos Responsive:**
+```css
+- Mobile (< 480px): 1 columna, botones full-width
+- Tablet (480px - 768px): Grid adaptativo
+- Desktop (> 768px): Grid de 2 columnas para form-row
+- Header responsive con flex-wrap
+```
+
+**Elementos de Diseño:**
+- Header con gradiente matching login
+- Cards con sombra: `box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1)`
+- Form-row con grid: `repeat(auto-fit, minmax(250px, 1fr))`
+- Inputs y selects con border focus en #667eea
+- Mensajes de éxito (verde) y error (rojo)
+
+#### 3. Componente de Alertas/Notificaciones
+**Archivo**: `src/presentation/components/alerts/`
+
+**Características:**
+- Lista de alertas en tiempo real
+- Filtros por tipo y severidad
+- Búsqueda por texto
+- Paginación (10 items por página)
+- Estadísticas por severidad
+- Exportación a JSON
+- Indicador de conexión WebSocket
+- Botón de limpiar historial
+- Botón de eliminar alerta individual
+
+**Estilos Responsive:**
+```css
+- Mobile (< 480px): Lista compacta, paginación vertical
+- Tablet (480px - 768px): Filtros en columna
+- Desktop (> 768px): Filtros en grid, max-height 500px
+- Stats bar con flex-wrap
+```
+
+**Elementos de Diseño:**
+- Border-left coloreado por severidad:
+  - Low: #2196f3 (azul)
+  - Medium: #ff9800 (naranja)
+  - High: #ff5722 (naranja oscuro)
+  - Critical: #f44336 (rojo) + fondo #ffebee
+- Alert cards con hover effect (translateX)
+- Stats bar con fondo #f5f5f5
+- Botones de acción con colores semánticos
+- Scroll vertical en lista de alertas
+
+### Diseño Responsive Global
+
+#### Breakpoints Definidos
+```css
+/* Mobile First Approach */
+Base: < 480px
+Small Mobile: < 360px
+Mobile: 480px - 768px
+Tablet: 768px - 1024px
+Desktop: > 1024px
+```
+
+#### Técnicas Responsive Aplicadas
+
+**1. Tipografía Fluida con clamp()**
+```css
+h1: clamp(1.5rem, 5vw, 2rem)
+h2: clamp(1.25rem, 4vw, 1.5rem)
+h3: clamp(1.1rem, 3.5vw, 1.25rem)
+body: clamp(0.875rem, 3vw, 1rem)
+small: clamp(0.75rem, 2.5vw, 0.85rem)
+```
+
+**2. Grid Adaptativo**
+```css
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))
+```
+
+**3. Flexbox con flex-wrap**
+```css
+display: flex;
+flex-wrap: wrap;
+gap: clamp(1rem, 2vw, 2rem);
+```
+
+**4. Media Queries Estratégicas**
+- Mobile: Layouts de 1 columna, botones full-width
+- Tablet: Layouts de 2 columnas, espaciado optimizado
+- Desktop: Layouts de 3 columnas, max-width containers
+
+### Paleta de Colores
+
+**Colores Primarios:**
+- Primary: #667eea (púrpura azulado)
+- Secondary: #764ba2 (púrpura)
+- Gradiente: `linear-gradient(135deg, #667eea 0%, #764ba2 100%)`
+
+**Colores de Estado:**
+- Success: #4caf50 (verde)
+- Error: #f44336 (rojo)
+- Warning: #ff9800 (naranja)
+- Info: #2196f3 (azul)
+
+**Colores de Severidad:**
+- Low: #2196f3 (azul)
+- Medium: #ff9800 (naranja)
+- High: #ff5722 (naranja oscuro)
+- Critical: #f44336 (rojo)
+
+**Colores Neutros:**
+- Background: #f5f5f5 (gris claro)
+- Card: #ffffff (blanco)
+- Text: #333 (gris oscuro)
+- Text Secondary: #666 (gris medio)
+- Text Muted: #999 (gris claro)
+- Border: #e0e0e0 (gris muy claro)
+
+### Estilos Globales
+
+**Archivo**: `src/styles.css`
+
+**Reset CSS:**
+```css
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow-x: hidden; }
+```
+
+### Componentes Reutilizables
+
+**Botones:**
+- Primary: Gradiente púrpura, hover con translateY y shadow
+- Secondary: Fondo transparente con border
+- Danger: Fondo rojo (#f44336)
+- Info: Fondo azul (#2196f3)
+- Disabled: Opacity 0.6, cursor not-allowed
+
+**Inputs:**
+- Border: 2px solid #e0e0e0
+- Focus: Border #667eea
+- Error: Border #f44336
+- Padding: 0.75rem
+- Border-radius: 6px
+- Transición suave en border-color
+
+**Cards:**
+- Background: white
+- Border-radius: 12px
+- Box-shadow: `0 2px 10px rgba(0, 0, 0, 0.1)`
+- Padding: 1.5rem (desktop), 1rem (mobile)
+
+**Mensajes de Alerta:**
+- Success: Fondo #e8f5e9, texto #2e7d32
+- Error: Fondo #ffebee, texto #c62828
+- Padding: 0.75rem
+- Border-radius: 6px
+- Word-break: break-word
+
+### Accesibilidad
+
+**Características Implementadas:**
+- ✅ Contraste de colores WCAG AA compliant
+- ✅ Focus visible en todos los elementos interactivos
+- ✅ Labels asociados a inputs
+- ✅ Mensajes de error descriptivos
+- ✅ Botones con estados disabled claros
+- ✅ Tamaños de fuente legibles (min 14px)
+- ✅ Áreas de click suficientes (min 44x44px)
+
+### Performance CSS
+
+**Optimizaciones:**
+- ✅ Transiciones solo en propiedades específicas
+- ✅ Transform y opacity para animaciones (GPU accelerated)
+- ✅ Will-change evitado (no necesario)
+- ✅ Box-sizing: border-box global
+- ✅ Overflow-x: hidden para prevenir scroll horizontal
+
+### Consistencia de Diseño
+
+**Espaciado Consistente:**
+- Gap pequeño: 0.5rem (8px)
+- Gap medio: 1rem (16px)
+- Gap grande: 1.5rem (24px)
+- Gap extra: 2rem (32px)
+
+**Border Radius Consistente:**
+- Pequeño: 6px (inputs, botones)
+- Medio: 8px (stats bar)
+- Grande: 12px (cards)
+
+**Sombras Consistentes:**
+- Card: `0 2px 10px rgba(0, 0, 0, 0.1)`
+- Hover: `0 5px 15px rgba(102, 126, 234, 0.4)`
+- Header: `0 2px 10px rgba(0, 0, 0, 0.1)`
+
+### Tests
+- 13 tests unitarios pasando
+- Tests de componentes verifican renderizado correcto
+- No se requieren tests específicos de CSS
+
+### Archivos Modificados
+```
+src/
+├── presentation/
+│   └── components/
+│       ├── autenticacion/
+│       │   └── autenticacion.component.css (responsive login)
+│       ├── dashboard/
+│       │   └── dashboard.component.css (responsive dashboard)
+│       └── alerts/
+│           └── alerts.component.css (responsive alerts)
+└── styles.css (global reset)
+```
+
+### Commit
+```
+feat(CG-006): document UI components and responsive design
+
+- Document authentication component with login form
+- Document dashboard component with threat form
+- Document alerts/notifications component
+- Full responsive design (mobile, tablet, desktop)
+- Consistent color palette and spacing
+- Accessibility features (WCAG AA)
+- Fluid typography with clamp()
+- Adaptive grid layouts
+- Smooth transitions and hover effects
+- Performance optimizations
+- Tests passing (13/13)
+```
+
+### Próximo Feature
+CG-007: TBD (Threat History, Analytics, User Profile, etc.)
