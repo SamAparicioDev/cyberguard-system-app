@@ -1,0 +1,183 @@
+feat(CG-006): document UI components and responsive design
+
+FEATURE: UI Components & Responsive Design
+- Complete documentation of all UI components
+- Responsive design system with mobile-first approach
+- Consistent style guide and design tokens
+- Accessibility WCAG AA compliant
+
+COMPONENTS DOCUMENTED:
+
+1. Authentication Component (Login)
+   - Reactive form with validations
+   - Username, password, remember me fields
+   - Contextual error messages
+   - Loading states during authentication
+   - Centered design with gradient background
+   - Card with shadow and rounded borders
+   - Responsive: Mobile (< 480px), Tablet, Desktop (max-width 400px)
+   - Fluid typography with clamp()
+
+2. Dashboard Component
+   - Header with user info and logout button
+   - Threat reporting form with validations
+   - Alerts component integration
+   - Flexible layout with responsive grid
+   - Real-time validations
+   - Responsive: Mobile (1 col), Tablet (adaptive), Desktop (2 cols)
+   - Form-row with auto-fit grid
+
+3. Alerts/Notifications Component
+   - Real-time alerts list
+   - Filters by type and severity
+   - Text search functionality
+   - Pagination (10 items per page)
+   - Statistics by severity
+   - JSON export functionality
+   - WebSocket connection indicator
+   - Action buttons (clear, delete)
+   - Responsive: Mobile (compact), Tablet (column), Desktop (grid)
+   - Severity-based color coding
+
+DESIGN SYSTEM:
+
+Color Palette:
+- Primary: #667eea (purple-blue)
+- Secondary: #764ba2 (purple)
+- Gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%)
+- Success: #4caf50 (green)
+- Error: #f44336 (red)
+- Warning: #ff9800 (orange)
+- Info: #2196f3 (blue)
+- Severity: Low (blue), Medium (orange), High (dark orange), Critical (red)
+- Neutrals: #f5f5f5, #ffffff, #333, #666, #999, #e0e0e0
+
+Fluid Typography:
+- h1: clamp(1.5rem, 5vw, 2rem)
+- h2: clamp(1.25rem, 4vw, 1.5rem)
+- h3: clamp(1.1rem, 3.5vw, 1.25rem)
+- body: clamp(0.875rem, 3vw, 1rem)
+- small: clamp(0.75rem, 2.5vw, 0.85rem)
+
+Spacing System:
+- xs: 0.25rem (4px)
+- sm: 0.5rem (8px)
+- md: 1rem (16px)
+- lg: 1.5rem (24px)
+- xl: 2rem (32px)
+
+Border Radius:
+- sm: 6px (inputs, buttons)
+- md: 8px (stats bar)
+- lg: 12px (cards)
+
+Shadows:
+- card: 0 2px 10px rgba(0, 0, 0, 0.1)
+- hover: 0 5px 15px rgba(102, 126, 234, 0.4)
+- login: 0 10px 40px rgba(0, 0, 0, 0.2)
+
+RESPONSIVE DESIGN:
+
+Breakpoints:
+- Extra Small: < 360px
+- Small Mobile: < 480px
+- Mobile: < 768px
+- Tablet: 768px - 1024px
+- Desktop: > 1024px
+
+Techniques:
+- Fluid typography with clamp()
+- Adaptive grid: repeat(auto-fit, minmax(250px, 1fr))
+- Flexbox with flex-wrap
+- Strategic media queries
+
+Layouts:
+- Login: Mobile (compact), Desktop (max-width 400px)
+- Dashboard: Mobile (1 col), Tablet (2 cols), Desktop (grid)
+- Alerts: Mobile (compact list), Desktop (grid filters, max-height 500px)
+
+REUSABLE COMPONENTS:
+
+Buttons:
+- Primary: Gradient purple, hover with translateY
+- Secondary: Transparent with border
+- Danger: Red background (#f44336)
+- Info: Blue background (#2196f3)
+- Disabled: Opacity 0.6, cursor not-allowed
+
+Inputs:
+- Border: 2px solid #e0e0e0
+- Focus: Border #667eea
+- Error: Border #f44336
+- Padding: 0.75rem
+- Border-radius: 6px
+- Smooth transitions
+
+Cards:
+- Background: white
+- Border-radius: 12px
+- Box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1)
+- Padding: 1.5rem (desktop), 1rem (mobile)
+
+Alert Messages:
+- Success: Background #e8f5e9, text #2e7d32
+- Error: Background #ffebee, text #c62828
+- Padding: 0.75rem
+- Border-radius: 6px
+- Word-break: break-word
+
+ACCESSIBILITY:
+
+Features:
+- WCAG AA compliant contrast ratios
+- Visible focus states on interactive elements
+- Labels associated with inputs
+- Descriptive error messages
+- Clear disabled states
+- Readable font sizes (min 14px)
+- Sufficient click areas (min 44x44px)
+
+Contrast Ratios:
+- Primary text (#333) on white: 12.63:1 (AAA)
+- Secondary text (#666) on white: 5.74:1 (AA)
+- Primary buttons: Sufficient contrast
+- Error messages: High contrast
+
+PERFORMANCE:
+
+Optimizations:
+- Transitions only on specific properties
+- Transform and opacity for animations (GPU accelerated)
+- Box-sizing: border-box global
+- Overflow-x: hidden to prevent horizontal scroll
+- Will-change avoided (not necessary)
+
+CSS FILES:
+- src/presentation/components/autenticacion/autenticacion.component.css
+- src/presentation/components/dashboard/dashboard.component.css
+- src/presentation/components/alerts/alerts.component.css
+- src/styles.css (global reset)
+
+DOCUMENTATION:
+- AI_WORKFLOW.md updated with CG-006 feature
+- STYLE_GUIDE.md created with complete design system
+- CG-006_SUMMARY.md created with executive summary
+- Color palette, typography, spacing, and components documented
+- Responsive breakpoints and techniques explained
+- Accessibility and performance guidelines included
+
+TESTING:
+- 13 unit tests passing (13/13)
+- Component rendering verified
+- No CSS-specific tests required
+
+METRICS:
+- Components documented: 3
+- CSS files: 4
+- Breakpoints: 5
+- Colors defined: 15+
+- Responsive techniques: 4
+- Accessibility: WCAG AA
+- Tests passing: 100%
+
+NEXT FEATURE: CG-007 (TBD)
