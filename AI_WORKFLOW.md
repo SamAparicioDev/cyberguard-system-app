@@ -1121,3 +1121,131 @@ feat(CG-007): document testing infrastructure
 
 ### Próximo Feature
 CG-008: TBD (Dockerfile, CI/CD, E2E Tests, etc.)
+
+
+---
+
+
+
+---
+
+## CG-008: Docker Infrastructure ✅
+
+**Fecha:** 2024
+**Estado:** Completado
+
+### Descripción
+Implementación de Dockerfile con multi-stage build para el frontend Angular. Los servicios backend corren externamente.
+
+### Archivos Creados
+
+```
+├── Dockerfile (multi-stage build)
+├── nginx.conf (nginx configuration)
+├── .dockerignore (build optimization)
+├── deploy.sh (build and run script)
+├── stop.sh (stop script)
+└── DOCKER_README.md (quick reference)
+```
+
+### Dockerfile
+
+**Multi-Stage Build:**
+- **Stage 1 (Build)**: node:20-alpine
+  - Install dependencies with npm ci
+  - Build Angular application
+
+- **Stage 2 (Production)**: nginx:alpine
+  - Copy nginx configuration
+  - Copy built application
+  - Expose port 80
+  - Health check configured
+  - Lightweight (~50MB)
+
+### Nginx Configuration
+
+**Features:**
+- Angular routing support (try_files)
+- Gzip compression
+- Security headers (X-Frame-Options, X-Content-Type-Options, X-XSS-Protection)
+- Static asset caching (1 year)
+- Error page handling
+
+### Deployment Scripts
+
+**deploy.sh:**
+```bash
+docker build -t cyberguard-frontend:latest .
+docker run -d --name cyberguard-frontend -p 4200:80 --restart unless-stopped cyberguard-frontend:latest
+```
+
+**stop.sh:**
+```bash
+docker stop cyberguard-frontend
+docker rm cyberguard-frontend
+```
+
+### Commands
+
+```bash
+# Deploy
+./deploy.sh
+
+# Stop
+./stop.sh
+
+# Manual
+docker build -t cyberguard-frontend:latest .
+docker run -d --name cyberguard-frontend -p 4200:80 cyberguard-frontend:latest
+docker logs -f cyberguard-frontend
+docker stop cyberguard-frontend
+```
+
+### Architecture
+
+```
+┌─────────────────────────────────┐
+│   Docker Container              │
+│   cyberguard-frontend           │
+│   Port 4200:80                  │
+└─────────────────────────────────┘
+              │
+              │ HTTP/WebSocket
+              ▼
+┌─────────────────────────────────┐
+│   External Services (localhost) │
+│   - Backend API: :3000          │
+│   - WebSocket: :8081            │
+└─────────────────────────────────┘
+```
+
+### Optimizations
+
+- Multi-stage build (~50MB)
+- .dockerignore excludes unnecessary files
+- npm ci --only=production
+- Nginx alpine (lightweight)
+- Gzip compression
+- Static asset caching
+- Health check
+
+### Tests
+- 13 tests unitarios pasando
+- Docker build verified
+
+### Commit
+```
+feat(CG-008): implement docker infrastructure for frontend
+
+- Add Dockerfile with multi-stage build
+- Add nginx.conf for Angular routing and security
+- Add .dockerignore for build optimization
+- Add deploy.sh and stop.sh scripts
+- Add DOCKER_README.md
+- Optimized build (~50MB)
+- Health check configured
+- Frontend connects to external backend services
+```
+
+### Próximo Feature
+CG-009: TBD
