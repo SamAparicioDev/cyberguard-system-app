@@ -126,7 +126,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
   }
 
   getSeverityClass(severity: string): string {
-    const map: any = {
+    const map: Record<string, string> = {
       'low': 'severity-low',
       'medium': 'severity-medium',
       'high': 'severity-high',

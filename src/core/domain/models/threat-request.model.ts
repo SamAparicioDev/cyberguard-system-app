@@ -7,5 +7,5 @@ export interface ThreatRequest {
   sourceIp: string;
   targetIp?: string;
   description: string;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 }

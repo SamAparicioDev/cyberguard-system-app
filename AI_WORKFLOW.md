@@ -275,3 +275,18 @@ fix: resolve websocket message parsing and real-time display issues
 - Remove console logs for cleaner UX
 - Tests passing (13/13)
 ```
+
+
+### Refactor
+```
+refactor: remove all 'any' types and add proper typing
+
+- Replace 'any' with Record<string, string> in getSeverityClass
+- Type ipValidator with AbstractControl and ValidationErrors
+- Replace 'any' with ThreatRequest in onSubmit
+- Type metadata as Record<string, unknown>
+- Type reconnectInterval as ReturnType<typeof setInterval>
+- Type messages array as AlertMessage[] in loadFromStorage
+- All code now properly typed (no 'any' remaining)
+- Tests passing (13/13)
+```
